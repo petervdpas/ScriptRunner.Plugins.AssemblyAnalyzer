@@ -6,7 +6,7 @@ using ScriptRunner.Plugins.AssemblyAnalyzer.Interfaces;
 using ScriptRunner.Plugins.Attributes;
 using ScriptRunner.Plugins.Utilities;
 
-namespace ScriptRunner.Plugins.Template;
+namespace ScriptRunner.Plugins.AssemblyAnalyzer;
 
 /// <summary>
 ///     A plugin that registers and provides ...

@@ -5,7 +5,7 @@ using System.Reflection;
 using ScriptRunner.Plugins.AssemblyAnalyzer.Interfaces;
 using ScriptRunner.Plugins.Models;
 
-namespace ScriptRunner.Plugins.Template;
+namespace ScriptRunner.Plugins.AssemblyAnalyzer;
 
 /// <summary>
 ///     Implements the <see cref="IAssemblyAnalyzer" /> interface to analyze assemblies and extract information
