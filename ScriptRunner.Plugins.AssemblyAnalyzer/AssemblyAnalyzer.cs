@@ -174,9 +174,11 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
             if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 var genericType = propertyType.GetGenericArguments().FirstOrDefault();
+                var genericTypeName = genericType != null ? genericType.Name : propertyType.ToString();
+
                 attributes[prop.Name] = new Dictionary<string, object>
                 {
-                    { "Type", $"List<{genericType?.Name ?? "Unknown"}>" }
+                    { "Type", $"List<{genericTypeName}>" }
                 };
             }
             else
