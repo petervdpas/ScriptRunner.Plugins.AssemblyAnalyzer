@@ -15,7 +15,7 @@ namespace ScriptRunner.Plugins.AssemblyAnalyzer;
 ///     This plugin demonstrates how to ...
 /// </remarks>
 [PluginMetadata(
-    "AssemblyAnalyzer Plugin",
+    "AssemblyAnalyzer",
     "A plugin that can analyze assemblies and extract information about entities and their relationships, such as class inheritance and property attributes...",
     "Peter van de Pas",
     "1.0.0",
@@ -27,7 +27,7 @@ public class Plugin : BaseAsyncServicePlugin
     /// <summary>
     ///     Gets the name of the plugin.
     /// </summary>
-    public override string Name => "AssemblyAnalyzer Plugin";
+    public override string Name => "AssemblyAnalyzer";
 
     /// <summary>
     /// Asynchronously initializes the plugin using the provided configuration.
@@ -60,6 +60,6 @@ public class Plugin : BaseAsyncServicePlugin
     {
         // Example execution logic
         await Task.Delay(50);
-        Console.WriteLine("AssemblyAnalyzer Plugin executed.");
+        Console.WriteLine("AssemblyAnalyzer executed.");
     }
 }

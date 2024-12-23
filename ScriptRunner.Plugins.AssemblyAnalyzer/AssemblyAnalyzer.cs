@@ -239,7 +239,8 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
                 (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(int)))
             {
                 var relatedEntityName = prop.Name[..^foreignKeySuffix.Length];
-                if (entityMap.ContainsKey(relatedEntityName))
+                if (entityMap.ContainsKey(relatedEntityName) && 
+                    !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == relatedEntityName && r.Key == "references"))
                 {
                     relationships.Add(new Relationship
                     {
@@ -254,7 +255,8 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
             if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 var genericType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
-                if (genericType != null && entityMap.ContainsKey(genericType.Name))
+                if (genericType != null && entityMap.ContainsKey(genericType.Name) &&
+                    !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == genericType.Name && r.Key == "has_children"))
                 {
                     relationships.Add(new Relationship
                     {
@@ -266,17 +268,19 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
             }
 
             // Check for enum relationships
-            if (!prop.PropertyType.IsEnum) continue;
-            
-            var enumTypeName = prop.PropertyType.Name;
-            if (entityMap.ContainsKey(enumTypeName))
+            if (prop.PropertyType.IsEnum)
             {
-                relationships.Add(new Relationship
+                var enumTypeName = prop.PropertyType.Name;
+                if (entityMap.ContainsKey(enumTypeName) &&
+                    !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == enumTypeName && r.Key == "enum"))
                 {
-                    FromEntity = type.Name,
-                    ToEntity = enumTypeName,
-                    Key = "enum"
-                });
+                    relationships.Add(new Relationship
+                    {
+                        FromEntity = type.Name,
+                        ToEntity = enumTypeName,
+                        Key = "enum"
+                    });
+                }
             }
         }
     }
