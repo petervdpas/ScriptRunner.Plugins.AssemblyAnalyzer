@@ -143,18 +143,20 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
         Dictionary<string, Entity> entityMap)
     {
         foreach (var type in types)
-            if (type.IsClass)
+        {
+            if (type.IsClass && !entityMap.ContainsKey(type.Name))
             {
                 var entity = CreateEntityFromClass(type);
                 entities.Add(entity);
                 entityMap[type.Name] = entity;
             }
-            else if (type.IsEnum)
+            else if (type.IsEnum && !entityMap.ContainsKey(type.Name))
             {
                 var entity = CreateEntityFromEnum(type);
                 entities.Add(entity);
                 entityMap[type.Name] = entity;
             }
+        }
     }
 
     /// <summary>
@@ -167,10 +169,23 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
         foreach (var prop in type.GetProperties())
         {
             var propertyType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-            attributes[prop.Name] = new Dictionary<string, object>
+
+            // Handle generic types like List<T>
+            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                { "Type", propertyType.Name }
-            };
+                var genericType = propertyType.GetGenericArguments().FirstOrDefault();
+                attributes[prop.Name] = new Dictionary<string, object>
+                {
+                    { "Type", $"List<{genericType?.Name ?? "Unknown"}>" }
+                };
+            }
+            else
+            {
+                attributes[prop.Name] = new Dictionary<string, object>
+                {
+                    { "Type", propertyType.Name }
+                };
+            }
         }
 
         return new Entity(type.Name, attributes);
@@ -225,25 +240,44 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
             {
                 var relatedEntityName = prop.Name[..^foreignKeySuffix.Length];
                 if (entityMap.ContainsKey(relatedEntityName))
+                {
                     relationships.Add(new Relationship
                     {
                         FromEntity = type.Name,
                         ToEntity = relatedEntityName,
                         Key = "references"
                     });
+                }
+            }
+
+            // Check for navigation properties (e.g., List<T>)
+            if (prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var genericType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
+                if (genericType != null && entityMap.ContainsKey(genericType.Name))
+                {
+                    relationships.Add(new Relationship
+                    {
+                        FromEntity = type.Name,
+                        ToEntity = genericType.Name,
+                        Key = "has_children"
+                    });
+                }
             }
 
             // Check for enum relationships
             if (!prop.PropertyType.IsEnum) continue;
-
+            
             var enumTypeName = prop.PropertyType.Name;
             if (entityMap.ContainsKey(enumTypeName))
+            {
                 relationships.Add(new Relationship
                 {
                     FromEntity = type.Name,
                     ToEntity = enumTypeName,
                     Key = "enum"
                 });
+            }
         }
     }
 
