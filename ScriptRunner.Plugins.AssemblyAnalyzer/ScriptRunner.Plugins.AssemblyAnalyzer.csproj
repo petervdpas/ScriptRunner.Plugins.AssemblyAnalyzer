@@ -5,7 +5,7 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DocumentationFile>..\Plugins\$(AssemblyName).xml</DocumentationFile>
-        <RootNamespace>ScriptRunner.Plugins.{{sourceName}}</RootNamespace>
+        <RootNamespace>ScriptRunner.Plugins.AssemblyAnalyzer</RootNamespace>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
