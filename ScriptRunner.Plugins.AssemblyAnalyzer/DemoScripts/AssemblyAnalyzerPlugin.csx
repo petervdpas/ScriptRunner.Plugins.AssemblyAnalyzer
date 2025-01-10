@@ -2,7 +2,8 @@
 {
     "TaskCategory": "Plugins",
     "TaskName": "AssemblyAnalyzer Plugin",
-    "TaskDetail": "Analyze TestParentEntity and TestChildEntity classes in the namespace and display entities and relationships."
+    "TaskDetail": "Analyze TestParentEntity and TestChildEntity classes in the namespace and display entities and relationships.",
+    "RequiredPlugins": ["AssemblyAnalyzer"]
 }
 */
 
