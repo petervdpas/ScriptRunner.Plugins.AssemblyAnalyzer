@@ -15,7 +15,8 @@ Toc-own-page: true
 
 ## Goal
 
-Use the **AssemblyAnalyzer Plugin** to dynamically explore assemblies and extract information about entities and their relationships.
+Use the **AssemblyAnalyzer Plugin** to dynamically explore assemblies and extract information about entities and their
+relationships.
 Learn how to initialize the analyzer, analyze assemblies or namespaces, and interpret results.
 
 ---
@@ -129,6 +130,7 @@ foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 After analyzing a namespace, you may see output like this:
 
 ### **Entities Detected**
+
 ```bash
 Entity Name: TestParentEntity
 Attributes:
@@ -144,6 +146,7 @@ Attributes:
 ```
 
 ### **Relationships Detected**
+
 ```bash
 From: TestParentEntity, To: TestChildEntity, Key: has_children
 From: TestChildEntity, To: TestParentEntity, Key: references
@@ -153,7 +156,7 @@ From: TestChildEntity, To: TestParentEntity, Key: references
 
 ## Summary
 
-The **AssemblyAnalyzer Plugin** is a powerful tool for dynamically extracting entities and their relationships 
+The **AssemblyAnalyzer Plugin** is a powerful tool for dynamically extracting entities and their relationships
 from assemblies.
 By using its capabilities, you can gain insights into the structure of your code and leverage
 this information for tasks like validation, documentation, or automation.

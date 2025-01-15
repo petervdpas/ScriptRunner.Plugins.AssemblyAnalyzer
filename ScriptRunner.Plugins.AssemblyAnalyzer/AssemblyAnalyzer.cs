@@ -143,7 +143,6 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
         Dictionary<string, Entity> entityMap)
     {
         foreach (var type in types)
-        {
             if (type.IsClass && !entityMap.ContainsKey(type.Name))
             {
                 var entity = CreateEntityFromClass(type);
@@ -156,7 +155,6 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
                 entities.Add(entity);
                 entityMap[type.Name] = entity;
             }
-        }
     }
 
     /// <summary>
@@ -241,16 +239,15 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
                 (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(int)))
             {
                 var relatedEntityName = prop.Name[..^foreignKeySuffix.Length];
-                if (entityMap.ContainsKey(relatedEntityName) && 
-                    !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == relatedEntityName && r.Key == "references"))
-                {
+                if (entityMap.ContainsKey(relatedEntityName) &&
+                    !relationships.Any(r =>
+                        r.FromEntity == type.Name && r.ToEntity == relatedEntityName && r.Key == "references"))
                     relationships.Add(new Relationship
                     {
                         FromEntity = type.Name,
                         ToEntity = relatedEntityName,
                         Key = "references"
                     });
-                }
             }
 
             // Check for navigation properties (e.g., List<T>)
@@ -258,15 +255,14 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
             {
                 var genericType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
                 if (genericType != null && entityMap.ContainsKey(genericType.Name) &&
-                    !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == genericType.Name && r.Key == "has_children"))
-                {
+                    !relationships.Any(r =>
+                        r.FromEntity == type.Name && r.ToEntity == genericType.Name && r.Key == "has_children"))
                     relationships.Add(new Relationship
                     {
                         FromEntity = type.Name,
                         ToEntity = genericType.Name,
                         Key = "has_children"
                     });
-                }
             }
 
             // Check for enum relationships
@@ -275,14 +271,12 @@ public class AssemblyAnalyzer : IAssemblyAnalyzer
                 var enumTypeName = prop.PropertyType.Name;
                 if (entityMap.ContainsKey(enumTypeName) &&
                     !relationships.Any(r => r.FromEntity == type.Name && r.ToEntity == enumTypeName && r.Key == "enum"))
-                {
                     relationships.Add(new Relationship
                     {
                         FromEntity = type.Name,
                         ToEntity = enumTypeName,
                         Key = "enum"
                     });
-                }
             }
         }
     }
